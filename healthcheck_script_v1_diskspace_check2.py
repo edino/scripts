@@ -157,7 +157,10 @@ while True:
     print("3. Run main3()")
     print("4. Exit")
 
-    choice = input("Enter your choice: ")
+    choice = input("Enter your choice (or press Enter for default): ").strip()
+
+    if not choice:
+        choice = "4"
 
     if choice == "1":
         main()
