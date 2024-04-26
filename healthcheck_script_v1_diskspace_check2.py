@@ -48,7 +48,7 @@ def main():
             print("Insufficient free space at /var. Exiting.")
             return
 
-        log_command("date", "Display current date and time", log_file)
+		log_command("date", "Display current date and time", log_file)
         log_command("uptime", "Show system uptime and load", log_file)
         log_command("nvram get '#'li.serial", "Get the serial number of the device", log_file)
         log_command("df -kh", "Show disk space usage", log_file)
@@ -145,33 +145,26 @@ def main3():
         print(f"An error occurred during script execution: {e}")
         exit(1)
 
-# Check if running as root
-if os.geteuid() != 0:
-    print("This script must be run as root")
-    exit(1)
+def display_menu():
+  print("Health Check Script Options:")
+  print("1. Run main()")
+  print("2. Run main2()")
+  print("3. Run main3()")
+  print("4. Exit")
 
-# Parse command-line arguments
-if len(sys.argv) != 2:
-    print("Usage: python healthcheck_script_v1_diskspace_check2.py <option>")
-    print("Options:")
-    print("1. Run main()")
-    print("2. Run main2()")
-    print("3. Run main3()")
-    print("4. Exit")
-    exit(1)
+def get_user_choice():
+  while True:
+    choice = input("Enter your choice (1-4): ")
+    if choice in ("1", "2", "3", "4"):
+      return choice
+    else:
+      print("Invalid choice. Please enter a number between 1 and 4.")
+      
+if __name__ == "__main__":
+  # Check if running as root
+    if os.geteuid() != 0:
+        print("This script must be run as root")
+        exit(1)
 
-option = sys.argv[1]
-
-# Run selected option
-if option == "1":
-    main()
-elif option == "2":
-    main2()
-elif option == "3":
-    main3()
-elif option == "4":
-    print("Exiting script.")
-    exit(0)
-else:
-    print("Invalid option. Please choose 1, 2, 3, or 4.")
-    exit(1)
+  display_menu()
+  choice = get_user_choice()
