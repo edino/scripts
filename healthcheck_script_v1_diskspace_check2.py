@@ -1,4 +1,5 @@
 import os
+import sys
 import subprocess
 from datetime import datetime
 import time
@@ -150,17 +151,22 @@ if os.geteuid() != 0:
     exit(1)
 
 # Display menu
-while True:
+def display_menu():
     print("\nMenu:")
     print("1. Run main()")
     print("2. Run main2()")
     print("3. Run main3()")
     print("4. Exit")
 
-    choice = input("Enter your choice (or press Enter for default): ").strip()
+def get_choice():
+    if sys.stdin.isatty():  # Check if input is coming from a terminal
+        return input("Enter your choice: ").strip()
+    else:
+        return "4"  # Default choice for non-interactive mode
 
-    if not choice:
-        choice = "4"
+while True:
+    display_menu()
+    choice = get_choice()
 
     if choice == "1":
         main()
