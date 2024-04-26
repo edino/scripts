@@ -1,8 +1,8 @@
 import os
-import sys
 import subprocess
 from datetime import datetime
 import time
+import sys
 
 # Get the timezone abbreviation (e.g., EDT, EST, etc.)
 timezone_abbr = time.tzname[0] if time.localtime().tm_isdst == 0 else time.tzname[1]
@@ -48,7 +48,7 @@ def main():
             print("Insufficient free space at /var. Exiting.")
             return
 
-        log_command("date", "Display current date and time", log_file)
+		log_command("date", "Display current date and time", log_file)
         log_command("uptime", "Show system uptime and load", log_file)
         log_command("nvram get '#'li.serial", "Get the serial number of the device", log_file)
         log_command("df -kh", "Show disk space usage", log_file)
@@ -150,32 +150,28 @@ if os.geteuid() != 0:
     print("This script must be run as root")
     exit(1)
 
-# Display menu
-def display_menu():
-    print("\nMenu:")
+# Parse command-line arguments
+if len(sys.argv) != 2:
+    print("Usage: python healthcheck_script_v1_diskspace_check2.py <option>")
+    print("Options:")
     print("1. Run main()")
     print("2. Run main2()")
     print("3. Run main3()")
     print("4. Exit")
+    exit(1)
 
-def get_choice():
-    if sys.stdin.isatty():  # Check if input is coming from a terminal
-        return input("Enter your choice: ").strip()
-    else:
-        return "4"  # Default choice for non-interactive mode
+option = sys.argv[1]
 
-while True:
-    display_menu()
-    choice = get_choice()
-
-    if choice == "1":
-        main()
-    elif choice == "2":
-        main2()
-    elif choice == "3":
-        main3()
-    elif choice == "4":
-        print("Exiting script.")
-        break
-    else:
-        print("Invalid choice. Please try again.")
+# Run selected option
+if option == "1":
+    main()
+elif option == "2":
+    main2()
+elif option == "3":
+    main3()
+elif option == "4":
+    print("Exiting script.")
+    exit(0)
+else:
+    print("Invalid option. Please choose 1, 2, 3, or 4.")
+    exit(1)
