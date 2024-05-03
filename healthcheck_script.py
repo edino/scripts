@@ -69,7 +69,7 @@ def main():
         log_command("listif -s", "List network interfaces with statistics", log_file)
         log_command("netstat -i", "List network interfaces and their statistics", log_file)
         log_command("psql -U nobody -d corporate -c 'select * from tblipaddress;'", "Show IP addresses from a PostgreSQL database assigned to the Interfaces", log_file)
-        log_command("route -n", "Show the routing table", log_file)
+        log_command("ip route show table all", "Show the routing table", log_file)
         log_command("ip route get 8.8.8.8", "Get route information for the IP address 8.8.8.8", log_file)
         log_command("nslookup eu2.apu.sophos.com", "Perform a DNS lookup for eu2.apu.sophos.com", log_file)
         log_command("ls -lah /var/cores/", "List core files in /var/cores/", log_file)
