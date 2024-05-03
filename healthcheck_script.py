@@ -11,14 +11,14 @@ def get_timestamp():
     current_time = time.localtime()
     return f"{current_time.tm_year}-{current_time.tm_mon:02d}-{current_time.tm_mday:02d}_at_{current_time.tm_hour:02d}:{current_time.tm_min:02d}:{current_time.tm_sec:02d}_{timezone_abbr}"
 
-# Function to log commands
 def log_command(command, description, log_file):
     timestamp = get_timestamp()
     with open(log_file, 'a') as f:
         f.write(f"[{timestamp}] {description}\n")
         f.write(f"[{timestamp}] Running: {command}\n")
         try:
-            result = subprocess.run(command, shell=True, stdout=f, stderr=subprocess.STDOUT)
+            result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+            f.write(result.stdout)  # Write command output to file
             f.write(f"[{timestamp}] Finished: {command}\n\n")
         except subprocess.CalledProcessError as e:
             f.write(f"[{timestamp}] Error running command: {e}\n\n")
@@ -48,7 +48,7 @@ def main():
             return
 
         # Commands to be executed
-	log_command("date", "Display current date and time", log_file)
+        log_command("date", "Display current date and time", log_file)
         log_command("uptime", "Show system uptime and load", log_file)
         log_command("nvram get '#'li.serial", "Get the serial number of the device", log_file)
         log_command("df -kh", "Show disk space usage", log_file)
