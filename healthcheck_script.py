@@ -34,7 +34,7 @@ def check_var_space():
         available_percentage = int(df_lines[1].split()[4].replace("%", ""))
         return available_percentage > 30
     return False
-    
+
 # Main function
 def main():
     try:
@@ -47,7 +47,8 @@ def main():
             print("Insufficient free space at /var. Exiting.")
             return
 
-        log_command("date", "Display current date and time", log_file)
+        # Commands to be executed
+	log_command("date", "Display current date and time", log_file)
         log_command("uptime", "Show system uptime and load", log_file)
         log_command("nvram get '#'li.serial", "Get the serial number of the device", log_file)
         log_command("df -kh", "Show disk space usage", log_file)
@@ -93,9 +94,9 @@ def main():
         log_command('tar -czvf /var/log_Master-$(nvram get "#li.serial")-$(date +"%Y-%m-%d_at_%T_%Z").tar.gz /var/tslog/*.log* /var/tslog/*.gz* | ls -lah /var/log_Master*', "Compress Appliance Logs to be collected", log_file)
         log_command('tar -czvf /var/kdump_Master-$(nvram get "#li.serial")-$(date +"%Y-%m-%d_at_%T_%Z").tar.gz /var/crashkernel/* | ls -lah /var/kdump_Master*', "Compress Crash Kernel Dumps to be collected", log_file)
         log_command('tar -czvf /var/core_dump_Master-$(nvram get "#li.serial")-$(date +"%Y-%m-%d_at_%T_%Z").tar.gz /var/cores/* | ls -lah /var/core_dump_Master*', "Compress Core Dumps to be collected", log_file)
+
     except Exception as e:
         print(f"Error: {e}")
-
 
 # Check if running as root
 if os.geteuid() != 0:
