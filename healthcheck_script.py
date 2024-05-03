@@ -81,7 +81,7 @@ def main():
         log_command("psql -U nobody -d corporate -Xc 'select * from tbloutboundallowedhost where id=1'", "Your device is configured as an open relay server. (Protect/Email/Relay Settings/Host Based Relay/Allow relay from hosts/networks) is set as ANY.", log_file)
         log_command("psql -U nobody -d corporate -Xc 'select * from tblclientservices' | grep -E 'LogoutAdminSess|LogoutAdminSess|blocklocaladmin|blockremoteadmin|remoteadminattempts|remoteadminseconds|remoteadminminutes'", "Display information about Login security (System/Administration/Admin and User Settings/Login security)", log_file)
 	log_command('psql -U nobody -d corporate -Xc "SELECT a.localaclid, a.zoneid, a.localserviceid, b.servicename, b.isenabled, c.zonename FROM tbllocalzoneacl a JOIN (SELECT * FROM tbllocalservice WHERE isenabled='Y') b ON a.localserviceid = b.localserviceid JOIN tblnetworkzone c ON a.zoneid = c.zoneid WHERE (a.localserviceid = 4 OR a.localserviceid = 2) AND a.zoneid = 2;"', "HTTPS and SSH turned on WAN zone", log_file)
-        log_command("ip route show table all", "Show the routing table", log_file)
+	log_command("ip route show table all", "Show the routing table", log_file)
         log_command("ip route get 8.8.8.8", "Get route information for the IP address 8.8.8.8", log_file)
         log_command("nslookup eu2.apu.sophos.com", "Perform a DNS lookup for eu2.apu.sophos.com", log_file)
         log_command("ls -lah /var/cores/", "List core files in /var/cores/", log_file)
