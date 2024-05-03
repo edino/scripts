@@ -35,6 +35,8 @@ def check_var_space():
         return available_percentage < 70
     return False
 
+ls -lah /var/*_Master-* && ls -lah /var/tam_healthcheck_*
+
 # Main function
 def main():
     try:
@@ -68,7 +70,10 @@ def main():
         log_command("tcpdump -D", "List available network interfaces for packet capture", log_file)
         log_command("listif -s", "List network interfaces with statistics", log_file)
         log_command("netstat -i", "List network interfaces and their statistics", log_file)
-        log_command("psql -U nobody -d corporate -c 'select * from tblipaddress;'", "Show IP addresses from a PostgreSQL database assigned to the Interfaces", log_file)
+        log_command("psql -U nobody -d corporate -Xc 'select * from tblipaddress;'", "Show IP addresses from a PostgreSQL database assigned to the Interfaces", log_file)
+        log_command("psql -U nobody -d corporate -Xc 'select ruleid,name from tblfirewallrule where logginglevel=-1 and isenable=1;'", "Show Firewall Rules Turned ON without Logging Disabled", log_file)
+        log_command("psql -U nobody -d corporate -Xc 'select * from tblatpconfiguration;'", "Show Advanced Threat protection Status (ATP/Sophos X-OPS) Log = Log and Drop = Log and Drop", log_file)
+        log_command("psql -U nobody -d corporate -Xc 'select * from tblactive_threat_response'", "Show MDR threat feeds Status", log_file)
         log_command("ip route show table all", "Show the routing table", log_file)
         log_command("ip route get 8.8.8.8", "Get route information for the IP address 8.8.8.8", log_file)
         log_command("nslookup eu2.apu.sophos.com", "Perform a DNS lookup for eu2.apu.sophos.com", log_file)
@@ -81,6 +86,7 @@ def main():
         log_command('cish -c "system auto-reboot-on-hang show"', "Show Status for Auto reboot system when kernel gets into a hang state is enabled", log_file)
         log_command('cish -c "show service-param"', "Show Status for Web Filtering Configurations for MTA, SMTP and Web HTTPS", log_file)
         log_command('cish -c "system diagnostics show version-info"', "System Check Information Details", log_file)
+        log_command('cish -c "show ips-settings"', "System Check Information Details", log_file)
         log_command('cish -c "system ha show details"', "High Availability Check Information Details", log_file)
         log_command("curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -", "Run a speed test using speedtest-cli", log_file)
         log_command('smartctl -a /dev/sda |grep "Device Model";smartctl -a /dev/sda | grep "Firmware Version"', "Disk Model and Firmware Details", log_file)
@@ -93,6 +99,7 @@ def main():
         log_command('tar -czvf /var/log_Master-$(nvram get "#li.serial")-$(date +"%Y-%m-%d_at_%T_%Z").tar.gz /var/tslog/*.log* /var/tslog/*.gz* | ls -lah /var/log_Master*', "Compress Appliance Logs to be collected", log_file)
         log_command('tar -czvf /var/kdump_Master-$(nvram get "#li.serial")-$(date +"%Y-%m-%d_at_%T_%Z").tar.gz /var/crashkernel/* | ls -lah /var/kdump_Master*', "Compress Crash Kernel Dumps to be collected", log_file)
         log_command('tar -czvf /var/core_dump_Master-$(nvram get "#li.serial")-$(date +"%Y-%m-%d_at_%T_%Z").tar.gz /var/cores/* | ls -lah /var/core_dump_Master*', "Compress Core Dumps to be collected", log_file)
+        
 
     except Exception as e:
         print(f"Error: {e}")
