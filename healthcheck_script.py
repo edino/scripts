@@ -36,8 +36,8 @@ def check_var_space():
     return False
 
 # List created Files function
-def list():
-print('ls -lah /var/*_Master-* && ls -lah /var/tam_healthcheck_*', "Location of created files...")
+def list_files():
+    print('ls -lah /var/*_Master-* && ls -lah /var/tam_healthcheck_*', "Location of created files...")
 
 # Main function
 def main():
@@ -119,7 +119,7 @@ if os.geteuid() != 0:
 try:
     # Call main function
     main()
-	list()
+	list_files()
 except KeyboardInterrupt:
     print("Script execution was manually interrupted by the user.")
     exit(1)
