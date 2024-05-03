@@ -22,13 +22,31 @@ def log_command(command, description, log_file):
             f.write(f"[{timestamp}] Finished: {command}\n\n")
         except subprocess.CalledProcessError as e:
             f.write(f"[{timestamp}] Error running command: {e}\n\n")
+			
+# Function to check free space at /var
+def check_var_space():
+    df_output = subprocess.run(["df", "-kh", "/var"], capture_output=True, text=True).stdout.strip()
+    print(f"Disk space at /var:\n{df_output}")
+    # Parsing the output to get the percentage of available space
+    df_lines = df_output.split("\n")
+    if len(df_lines) > 1:
+        # Splitting the second line by whitespace and getting the percentage value
+        available_percentage = int(df_lines[1].split()[4].replace("%", ""))
+        return available_percentage > 30
+    return False
     
 # Main function
 def main():
-    nvram_output = subprocess.run(["nvram", "get", "#li.serial"], capture_output=True, text=True).stdout.strip()
-    log_file = f"/var/tam_healthcheck_{nvram_output}-{get_timestamp()}.log"
-    print(f"Executing commands and saving output to {log_file} ...")
-	
+    try:
+        nvram_output = subprocess.run(["nvram", "get", "#li.serial"], capture_output=True, text=True).stdout.strip()
+        log_file = f"/var/tam_healthcheck_{nvram_output}-{get_timestamp()}.log"
+        print(f"Executing commands and saving output to {log_file} ...")
+
+        # Check free space at /var before proceeding with the script
+        if not check_var_space():
+            print("Insufficient free space at /var. Exiting.")
+            return
+
 	log_command("date", "Display current date and time", log_file)
 	log_command("uptime", "Show system uptime and load", log_file)
 	log_command("nvram get '#'li.serial", "Get the serial number of the device", log_file)
@@ -71,10 +89,10 @@ def main():
 	log_command('grep -i "drdy\|i/o\|segfault" /var/tslog/syslog.log*', "Check for Disk Errors", log_file)
 	log_command('grep -i "media error" /var/tslog/syslog.log*', "Check for Disk Errors - This Particular error supports a straight RMA if the timestamp is recent and appliance has valid warranty", log_file)
 	log_command('grep -i "call trace" /var/tslog/syslog.log*', "Check for Kernel Crash Errors", log_file)
+	log_command("Create Tarballs for /var/tslog/ /var/crashkernel/ /var/cores/ directories.", log_file)
     	log_command('tar -czvf /var/log_Master-$(nvram get "#li.serial")-$(date +"%Y-%m-%d_at_%T_%Z").tar.gz /var/tslog/*.log* /var/tslog/*.gz* | ls -lah /var/log_Master*', "Compress Appliance Logs to be collected", log_file)
     	log_command('tar -czvf /var/kdump_Master-$(nvram get "#li.serial")-$(date +"%Y-%m-%d_at_%T_%Z").tar.gz /var/crashkernel/* | ls -lah /var/kdump_Master*', "Compress Crash Kernel Dumps to be collected", log_file)
     	log_command('tar -czvf /var/core_dump_Master-$(nvram get "#li.serial")-$(date +"%Y-%m-%d_at_%T_%Z").tar.gz /var/cores/* | ls -lah /var/core_dump_Master*', "Compress Core Dumps to be collected", log_file)
-
 
 # Check if running as root
 if os.geteuid() != 0:
