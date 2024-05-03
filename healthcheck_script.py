@@ -32,7 +32,7 @@ def check_var_space():
     if len(df_lines) > 1:
         # Splitting the second line by whitespace and getting the percentage value
         available_percentage = int(df_lines[1].split()[4].replace("%", ""))
-        return available_percentage > 30
+        return available_percentage < 70
     return False
 
 # Main function
