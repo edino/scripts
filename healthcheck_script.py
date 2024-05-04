@@ -22,7 +22,7 @@ def log_command(command, description, log_file):
             f.write(f"[{timestamp}] Finished: {command}\n\n")
         except subprocess.CalledProcessError as e:
             f.write(f"[{timestamp}] Error running command: {e}\n\n")
-			
+
 # Function to check free space at /var
 def check_var_space():
     df_output = subprocess.run(["df", "-kh", "/var"], capture_output=True, text=True).stdout.strip()
@@ -51,7 +51,7 @@ def main():
             print("Insufficient free space at /var. Exiting.")
             return
 
-        # Commands to be executed
+		# Commands to be executed
         log_command("date", "Display current date and time", log_file)
         log_command("uptime", "Show system uptime and load", log_file)
         log_command("nvram get '#'li.serial", "Get the serial number of the device", log_file)
@@ -80,8 +80,8 @@ def main():
         log_command("psql -U nobody -d corporate -Xc 'select * from tblconfiguration;' | grep -E 'pua_detection'", "Display Status for PUA Detection (Protect/Web/General Settings/Protection/Malware and content scanning/Block potentially unwanted applications)", log_file)
         log_command("psql -U nobody -d corporate -Xc 'select * from tbloutboundallowedhost where id=1'", "Your device is configured as an open relay server. (Protect/Email/Relay Settings/Host Based Relay/Allow relay from hosts/networks) is set as ANY.", log_file)
         log_command("psql -U nobody -d corporate -Xc 'select * from tblclientservices' | grep -E 'LogoutAdminSess|LogoutAdminSess|blocklocaladmin|blockremoteadmin|remoteadminattempts|remoteadminseconds|remoteadminminutes'", "Display information about Login security (System/Administration/Admin and User Settings/Login security)", log_file)
-	    log_command('psql -U nobody -d corporate -Xc "SELECT a.localaclid, a.zoneid, a.localserviceid, b.servicename, b.isenabled, c.zonename FROM tbllocalzoneacl a JOIN (SELECT * FROM tbllocalservice WHERE isenabled='Y') b ON a.localserviceid = b.localserviceid JOIN tblnetworkzone c ON a.zoneid = c.zoneid WHERE (a.localserviceid = 4 OR a.localserviceid = 2) AND a.zoneid = 2;"', "HTTPS and SSH turned on WAN zone", log_file)
-	    log_command("ip route show table all", "Show the routing table", log_file)
+        log_command('psql -U nobody -d corporate -Xc "SELECT a.localaclid, a.zoneid, a.localserviceid, b.servicename, b.isenabled, c.zonename FROM tbllocalzoneacl a JOIN (SELECT * FROM tbllocalservice WHERE isenabled='Y') b ON a.localserviceid = b.localserviceid JOIN tblnetworkzone c ON a.zoneid = c.zoneid WHERE (a.localserviceid = 4 OR a.localserviceid = 2) AND a.zoneid = 2;"', "HTTPS and SSH turned on WAN zone", log_file)
+        log_command("ip route show table all", "Show the routing table", log_file)
         log_command("ip route get 8.8.8.8", "Get route information for the IP address 8.8.8.8", log_file)
         log_command("nslookup eu2.apu.sophos.com", "Perform a DNS lookup for eu2.apu.sophos.com", log_file)
         log_command("ls -lah /var/cores/", "List core files in /var/cores/", log_file)
@@ -106,7 +106,6 @@ def main():
         log_command('tar -czvf /var/log_Master-$(nvram get "#li.serial")-$(date +"%Y-%m-%d_at_%T_%Z").tar.gz /var/tslog/*.log* /var/tslog/*.gz* | ls -lah /var/log_Master*', "Compress Appliance Logs to be collected", log_file)
         log_command('tar -czvf /var/kdump_Master-$(nvram get "#li.serial")-$(date +"%Y-%m-%d_at_%T_%Z").tar.gz /var/crashkernel/* | ls -lah /var/kdump_Master*', "Compress Crash Kernel Dumps to be collected", log_file)
         log_command('tar -czvf /var/core_dump_Master-$(nvram get "#li.serial")-$(date +"%Y-%m-%d_at_%T_%Z").tar.gz /var/cores/* | ls -lah /var/core_dump_Master*', "Compress Core Dumps to be collected", log_file)
-        
 
     except Exception as e:
         print(f"Error: {e}")
@@ -119,7 +118,7 @@ if os.geteuid() != 0:
 try:
     # Call main function
     main()
-	list_files()
+    list_files()
 except KeyboardInterrupt:
     print("Script execution was manually interrupted by the user.")
     exit(1)
