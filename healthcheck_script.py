@@ -37,7 +37,7 @@ def check_var_space():
 
 # List created Files function
 def list_files():
-    command = 'ls -lah /var/*_Master-* && ls -lah /var/tam_healthcheck_*'
+    command = 'ls -lah /var/*_Master-* /var/tam_healthcheck_*'
     print(command, "Location of created files...")
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
     print(result.stdout)
