@@ -54,7 +54,7 @@ def main():
             print("Insufficient free space at /var. Exiting.")
             return
 
-		# Commands to be executed
+	# Commands to be executed
         log_command("date", "Display current date and time", log_file)
         log_command("uptime", "Show system uptime and load", log_file)
         log_command("nvram get '#'li.serial", "Get the serial number of the device", log_file)
